@@ -1,8 +1,11 @@
-import React from 'react';
+import React,{Component} from 'react';
 import {TextInput,StyleSheet} from 'react-native';
 
-const Input = props =>{
-    return <TextInput keyboardType="number-pad" {...props} style={{...styles.input,...props.myStyle}} on/>
+class Input extends Component{
+
+    render(){
+    return <TextInput keyboardType="number-pad" {...this.props} style={{...styles.input,...this.props.myStyle}} />
+    }
 }
 
 const styles =StyleSheet.create({

@@ -1,15 +1,39 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React,{useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import * as Font from 'expo-font'
+import {AppLoading} from 'expo'
 
 import Header from "./components/header"
 import Begin from "./components/screens/begin"
+import Game from "./components/screens/game"
 
 export default function App() {
+  const [number,setnumber]=useState("");
+  const [loading,setLoading]=useState(true);
+
+  const fetchFonts=()=>{
+    return Font.loadAsync({
+      "open-sans-bold":require('./assets/fonts/OpenSans-Bold.ttf'),
+      "open-sans":require('./assets/fonts/OpenSans-Regular.ttf')
+    })
+  }
+
+  const setNumber=(num)=>{
+    setnumber(()=>num);
+  }
+
+  if(loading)
+  return <AppLoading startAsync={fetchFonts} onFinish={()=>setLoading(false)}/>
+
+  var screen=<Begin setNumber={setNumber}/>;
+  if(number!="")
+  screen=(<Game number={number.num} digits={number.digits}/>);
+
   return (
     <View style={styles.container}>
-      <Header title="Guess a Number"/>
-      <Begin/>
+      <Header title="Guess The Number"/>
+      {screen}
       <StatusBar style="auto" />
     </View>
   );

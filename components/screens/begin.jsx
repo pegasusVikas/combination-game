@@ -8,26 +8,41 @@ import Input from '../Input'
 import ModeContainer from '../modeContainer'
 
 
-export default function Begin() {
+export default function Begin(props) {
     const [digits, setDigits] = useState(3);
     const [confirm, setConfirm] = useState(false);
     const [selected, setSelected] = useState(3);
     const [numbers,setNumbers] = useState([]);
-    const [focus,setFocus] = useState(3);
+    const [focus,setFocus] = useState(0);
+    const [editable,setEditable]=useState(false);
 
     const upperlimit = 5;
     const lowerlimit = 2;
-
-    const inputRef={}
-    for(var j=0;j<upperlimit;j++){
-     inputRef[""+j]=useRef(null);
-    }
+    var num=[]
 
     useEffect(() => {
-        for(var j=0;j<upperlimit;j++){
-            console.log(inputRef[""+j])
-           }
-    }, [])
+        for(var i=0;i<upperlimit;i++)
+        num[i]=editable?"":"X";
+        setNumbers(()=>num)
+        setFocus(()=>0)   
+    }, [editable,selected])
+
+    useEffect(() => {
+        if(focus<0)
+        setFocus(()=>0)
+        else if(focus>=selected)
+        {
+            setFocus(()=>selected-1);
+
+        }
+        else if(focus==selected-1)
+        {
+            if(numbers[selected-1]!="")
+            Keyboard.dismiss();
+        }   
+    }, [focus])
+
+    
 
     const change = (i) => {
         console.log(i)
@@ -38,6 +53,8 @@ export default function Begin() {
     const reset = () => {
         setDigits(() => 3);
         setConfirm(()=>false);
+        setFocus(()=>0);
+        setNumbers([])
     }
 
     const select = () => {
@@ -48,30 +65,62 @@ export default function Begin() {
         }
         setSelected(() => digits);
         setConfirm(() => true);
+        setEditable(()=>editable)
     }
 
     const inputHandler=(nativeEvent)=>{
-        nativeEvent=nativeEvent.nativeEvent;
+        nativeEvent=nativeEvent.nativeEvent ;
         if(nativeEvent.key==='Backspace'){
             console.log(focus,"backspace")
-            if(focus>=0){
-            setFocus(focus=>focus-1);
-            var num =numbers;
-            num[focus]="";
-            setNumbers(()=>num);
+            if(focus==0&&numbers[0]==""){
+                Keyboard.dismiss();
             }
-            
+            else if(focus>=0){
+                var num =numbers;
+                num[focus]="";
+                setFocus((focus)=>focus-1);
+                setNumbers(()=>num);
+            }
         }
     }
 
     const onChange=(text)=>{
-        if(text.match(/^[0-9]$/)){
+        if(text.match(/^[0-9]+$/)){
+            
             var num =numbers;
-            num[focus]=text;
+            num[focus]=text.charAt(text.length-1);
             console.log(focus,"text")
             setNumbers(()=>num);
             setFocus(focus=>focus+1);
         }
+    }
+
+    const gameMode=(is2player)=>{
+        setEditable(()=>is2player);
+    }
+
+    const random=()=>{
+        var num=Math.random()
+        if(num==1)
+        return random()
+        return parseInt(num*Math.pow(10,selected));
+    }
+    const startGame=(e)=>{
+        var num=0;
+        if(!editable)
+            num=random()
+        else
+        {for(var i =0;i<selected;i++)
+            if(!numbers[i].match(/^[0-9]/)){
+                Alert.alert("Invalid number😠","Please enter a valid number",[{text:"Okie👍",style:"cancel"}])
+                return;
+            }
+            else{
+                num=num*10+parseInt(numbers[i])
+            }
+        }
+        console.log("congo",numbers)
+        props.setNumber({num:num,digits:selected})
     }
 
     const Inputs =(props)=>{
@@ -79,22 +128,25 @@ export default function Begin() {
         const n=selected;
         var i=0;
         for(i=0;i<n;i++){
+            var color =i==focus?constants.secondary:"grey";
             push.push(
                 <Input  
                 key={i}
-                myStyle={{...styles.input,marginVertical:0,marginHorizontal:4,borderBottomWidth:3}} 
-                maxLength={1} 
+                myStyle={{...styles.input,marginVertical:0,marginHorizontal:4,borderBottomWidth:3,borderBottomColor:color}} 
+                maxLength={2} 
                 autoFocus={i==focus} 
                 onKeyPress={(e)=>inputHandler(e)} 
                 onChangeText={(e)=>onChange(e)}
                 value={numbers[i]}
-                ref={inputRef[""+i]}
+                editable={i==focus&&editable}
                 />
                 
                 )
         }
         return <View style={styles.inputContainer}>{push}</View>;
     }
+
+    //console.log(numbers);
 
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
@@ -125,13 +177,23 @@ export default function Begin() {
                     </View>
                 </Card>
                 {confirm &&
-                    <Card myStyle={{...styles.container,width:"auto",alignItems:"center"}}>
-                        <View>
+                    <Card myStyle={{...styles.container,width:400,alignItems:"center"}}>
+                       
                             <Text>you have selected <Text style={{fontSize:20,fontWeight:"bold",color:constants.primary}}>{selected}</Text></Text>
                             <ModeContainer style={styles.inputContainer}>
                                 <Inputs/>
                             </ModeContainer>
-                        </View>
+                                {!editable?
+                                    <View style={styles.buttonContainer}>
+                                    <Button title="2 Player" style={styles.button} onPress={()=>gameMode(true)}/>
+                                    <Button title="Random" style={styles.button} onPress={startGame}/>
+                                    </View>
+                                    :
+                                    <View style={styles.buttonContainer}>
+                                    <Button title="Back" style={styles.button} onPress={()=>gameMode(false)}/>
+                                    <Button title="Play" style={styles.button} onPress={startGame}/>
+                                    </View>
+                                }
                     </Card>
                 }
             </View>
@@ -168,6 +230,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     title: {
+        fontFamily:"open-sans",
         fontSize: 20,
         paddingTop: 10,
     },
