@@ -7,10 +7,13 @@ import {AppLoading} from 'expo'
 import Header from "./components/header"
 import Begin from "./components/screens/begin"
 import Game from "./components/screens/game"
+import GameOver from "./components/screens/gameOver"
 
 export default function App() {
   const [number,setnumber]=useState("");
   const [loading,setLoading]=useState(true);
+  const [tries,settries]=useState(2);
+
 
   const fetchFonts=()=>{
     return Font.loadAsync({
@@ -23,12 +26,21 @@ export default function App() {
     setnumber(()=>num);
   }
 
+  const setTries = (Try)=>{
+    console.log(Try)
+    settries(()=>Try)
+  }
+
+
   if(loading)
   return <AppLoading startAsync={fetchFonts} onFinish={()=>setLoading(false)}/>
 
   var screen=<Begin setNumber={setNumber}/>;
-  if(number!="")
-  screen=(<Game number={number.num} digits={number.digits}/>);
+
+  if(tries!=="")
+  screen=<GameOver number={number.num} digits={number.digits} try={tries}/>
+  else if(number!="")
+  screen=(<Game number={number.num} digits={number.digits} setTries={setTries}/>);
 
   return (
     <View style={styles.container}>
