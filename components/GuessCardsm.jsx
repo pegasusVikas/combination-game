@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         height: 20,
         width: 20,
         borderBottomColor: "grey",
-        borderBottomWidth: 3,
+        borderBottomWidth: 2,
         textAlign: "center",
         textAlignVertical: "center",
         fontSize: 15,
@@ -49,16 +49,19 @@ const styles = StyleSheet.create({
     },
     digitCard: {
         padding: 5,
+        paddingHorizontal:2,
         elevation: 0,
-        marginHorizontal: 2,
+        marginHorizontal: "2%",
     },
     guessCard: {
-        width: "70%",
+        width: "auto",
+        maxWidth:"80%",
         elevation: 2,
         borderRadius: 0,
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        padding:10
     },
     redDot: {
         backgroundColor: "#00C851",

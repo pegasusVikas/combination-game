@@ -50,7 +50,7 @@ export default (props) => {
 
     const backspace = ({ nativeEvent }) => {
         if (nativeEvent.key == "Backspace") {
-            console.log("hello")
+            
             if (digits > 0) {
                 setGuessNum((num) => parseInt(num / 10))
                 setDigits((dig) => dig - 1);
@@ -88,7 +88,7 @@ export default (props) => {
                     present++;
                 }
             }
-            console.log(presentArr);
+            
             if (crtPos != num) {
                 var hist = history;
                 hist.unshift({ correct: crtPos, present: present, arr: arr })
@@ -98,7 +98,7 @@ export default (props) => {
                 setGuessNum(() => 0)
             }
             else {
-                console.log("congo")
+                
                 props.setTries(tries)
             }
 
@@ -112,13 +112,16 @@ export default (props) => {
         var inputs = []
         for (var i = 0; i < props.digits; i++) {
             inputs.push(
-                (<Card key={i} myStyle={{ ...styles.digitCard, backgroundColor: i + 1 > digits ? "white" : constants.digits }}>
+                (<TouchableWithoutFeedback style={{padding:4}} key={i}>
+                    <Card key={i} myStyle={{ ...styles.digitCard, backgroundColor: i + 1 > digits ? "white" : constants.digits }}>
                     <Text style={{ ...styles.digit, borderBottomColor: i + 1 > digits ? "grey" : constants.digits }}>{i + 1 > digits ? "" : "" + (parseInt(guessNum / Math.pow(10, digits - (i + 1))) % 10)}</Text>
-                </Card>)
+                </Card>
+                </TouchableWithoutFeedback>
+                )
             )
 
         }
-        console.log(history, "\n\n\n")
+       
         return inputs
     }
 
@@ -139,20 +142,20 @@ export default (props) => {
                 </View>
                 <View style={styles.button}><Button color={constants.secondary} title="Check" onPress={() => onCheck()} /></View>
                 <Text style={{ fontSize: 15 }}>Tries  <Text style={{ fontSize: 20, fontWeight: "bold", color: constants.primary }}>{tries}</Text></Text>
-                <View style={{ flex: 1 }}>
+                
                     <FlatList
-                        style={{ flex: 1, width: "100%" }}
+                        style={{ width: "100%",paddingVertical:5 }}
                         keyExtractor={(item, index) => { return uuid() }}
                         data={history}
                         renderItem={(obj) => {
-                            console.log(obj, "heyyyyyyyy")
+                            
                             const { item } = obj;
                             if(obj.index==0)
                             return <GuessCard correct={item.correct} present={item.present} arr={item.arr} />
                             return <GuessCardsm correct={item.correct} present={item.present} arr={item.arr} />
                         }}
                     />
-                </View>
+                
 
 
             </View>
@@ -165,6 +168,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
+        
     },
     digit: {
         height: 40,
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
     digitCard: {
         padding: 10,
         elevation: 2,
-        marginHorizontal: 4,
+        
     },
     digitContainer: {
         marginVertical: 20,

@@ -1,5 +1,5 @@
 import React, { useState,useRef,useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert,ScrollView } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 import Card from '../Card'
@@ -15,6 +15,7 @@ export default function Begin(props) {
     const [numbers,setNumbers] = useState([]);
     const [focus,setFocus] = useState(0);
     const [editable,setEditable]=useState(false);
+
 
     const upperlimit = 5;
     const lowerlimit = 2;
@@ -45,7 +46,7 @@ export default function Begin(props) {
     
 
     const change = (i) => {
-        console.log(i)
+       
         if ((digits + i >= lowerlimit) && (digits + i <= upperlimit))
             setDigits(digit => digit + i)
     }
@@ -71,7 +72,7 @@ export default function Begin(props) {
     const inputHandler=(nativeEvent)=>{
         nativeEvent=nativeEvent.nativeEvent ;
         if(nativeEvent.key==='Backspace'){
-            console.log(focus,"backspace")
+            
             if(focus==0&&numbers[0]==""){
                 Keyboard.dismiss();
             }
@@ -89,7 +90,7 @@ export default function Begin(props) {
             
             var num =numbers;
             num[focus]=text.charAt(text.length-1);
-            console.log(focus,"text")
+            
             setNumbers(()=>num);
             setFocus(focus=>focus+1);
         }
@@ -119,8 +120,9 @@ export default function Begin(props) {
                 num=num*10+parseInt(numbers[i])
             }
         }
-        console.log("congo",numbers)
+        
         props.setNumber({num:num,digits:selected})
+
     }
 
     const Inputs =(props)=>{
@@ -150,13 +152,14 @@ export default function Begin(props) {
 
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
+        <ScrollView>
             <View style={styles.screen}>
                 <Text style={styles.title}>Start a Game!</Text>
                 <Card myStyle={styles.container}>
                     <Text>Choose number of Digits</Text>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <FontAwesome5 name={'angle-left'} 
-                        style={{ ...styles.font, backgroundColor: digits <= lowerlimit ? "grey" : constants.click }} 
+                        style={{ ...styles.font, backgroundColor: digits <= lowerlimit ? "grey" : constants.digits }} 
                         size={25} 
                         onPress={() => { change(-1) }} 
                         />
@@ -166,7 +169,7 @@ export default function Begin(props) {
                         value={""+digits} 
                         />
                         <FontAwesome5 name={'angle-right'} 
-                        style={{ ...styles.font, backgroundColor: digits >= upperlimit ? "grey" : constants.click }} 
+                        style={{ ...styles.font, backgroundColor: digits >= upperlimit ? "grey" : constants.digits }} 
                         size={25} 
                         onPress={() => { change(1) }} 
                         />
@@ -197,6 +200,7 @@ export default function Begin(props) {
                     </Card>
                 }
             </View>
+            </ScrollView>
         </TouchableWithoutFeedback>
     );
 }

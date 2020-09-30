@@ -12,7 +12,7 @@ import GameOver from "./components/screens/gameOver"
 export default function App() {
   const [number,setnumber]=useState("");
   const [loading,setLoading]=useState(true);
-  const [tries,settries]=useState(2);
+  const [tries,settries]=useState("");
 
 
   const fetchFonts=()=>{
@@ -27,8 +27,13 @@ export default function App() {
   }
 
   const setTries = (Try)=>{
-    console.log(Try)
+    
     settries(()=>Try)
+  }
+
+  const reset =()=>{
+    setnumber(()=>"");
+    settries(()=>"");
   }
 
 
@@ -38,7 +43,7 @@ export default function App() {
   var screen=<Begin setNumber={setNumber}/>;
 
   if(tries!=="")
-  screen=<GameOver number={number.num} digits={number.digits} try={tries}/>
+  screen=<GameOver number={number.num} digits={number.digits} try={tries} reset={reset}/>
   else if(number!="")
   screen=(<Game number={number.num} digits={number.digits} setTries={setTries}/>);
 

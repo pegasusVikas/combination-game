@@ -20,7 +20,7 @@ export default (props)=>{
                     <View style={{ flexDirection: "row", alignItems: "center",marginHorizontal:5 }}>
                         <View style={styles.redDot}></View>
                         <View style={{marginLeft:3}}>
-                            <Text>{props.correct + " digits"}</Text>
+                            <Text style={{fontSize:12}}>{props.correct + " digits"}</Text>
                             <Text style={styles.text}>{"correct\nposition"}</Text>
                         </View>
                     </View>
@@ -28,7 +28,7 @@ export default (props)=>{
                     <View style={{ flexDirection: "row", alignItems: "center",marginHorizontal:5 }}>
                         <View style={{...styles.redDot,backgroundColor:constants.primary}}></View>
                         <View style={{marginLeft:3}}>
-                            <Text>{props.present + " digits"}</Text>
+                            <Text style={{fontSize:12}}>{props.present + " digits"}</Text>
                             <Text style={styles.text}>{"present in\nthe number"}</Text>
                         </View>
                     </View>
@@ -43,21 +43,21 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30,
         borderBottomColor: "grey",
-        borderBottomWidth: 3,
+        borderBottomWidth: 2,
         textAlign: "center",
         textAlignVertical: "center",
         fontSize: 20,
         fontWeight: "bold"
     },
     digitCard: {
-        padding: 5,
-        elevation: 1,
+        padding: 1,
+        elevation: 2,
         marginHorizontal: 2,
-        borderRadius:10
+        borderRadius:0
     },
     guessCard: {
-        width: "90%",
-        maxWidth:"100%",
+        width:"auto",
+        maxWidth:"95%",
         elevation: 2,
         borderRadius: 0,
         flexDirection: "row",
@@ -73,6 +73,8 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: "open-sans",
         marginHorizontal: 2,
-        fontSize: 11
+        fontSize: 10,
+        flexWrap:"wrap",
+        flexShrink:1
     }
 })
